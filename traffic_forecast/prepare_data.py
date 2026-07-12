@@ -2,24 +2,25 @@ import os
 import pandas as pd
 from datetime import datetime
 
-# only use data from after this date
+# filter out anything before this date
 CUTOFF = datetime(2020, 5, 14)
 os.makedirs('data', exist_ok=True)
 
-# --- permanent count stations ---
+# handle permanent count stations first
 print("Processing permanent count stations...")
 perm = pd.read_csv('data/Permanent_Count_Station_Traffic_Counts.csv')
 perm['DateTime'] = pd.to_datetime(perm['Timestamp'], errors='coerce')
 perm = perm[perm['DateTime'] >= CUTOFF].copy()
 perm['Count'] = pd.to_numeric(perm['Total'], errors='coerce')
 
-perm = perm[['DateTime', 'Count', 'Latitude', 'Longitude', 'Site']].dropna(
+cols_to_keep = ['DateTime', 'Count', 'Latitude', 'Longitude', 'Site']
+perm = perm[cols_to_keep].dropna(
     subset=['Latitude', 'Longitude', 'Count']
 ).reset_index(drop=True)
 perm.to_csv('data/permanent_6yr.csv', index=False)
 print(f"  saved {len(perm):,} rows -> data/permanent_6yr.csv")
 
-# --- coordinate lookup for midblock ---
+# load coordinate lookup for midblock stations
 print("Loading coordinate lookup...")
 coords = pd.read_csv('data/locations_with_coordinates.csv')
 coords = coords[coords['Coordinates_1'].notna()].copy()
@@ -29,7 +30,7 @@ coords = coords[['Locations', 'Latitude', 'Longitude']].rename(
 )
 print(f"  {len(coords):,} locations with coordinates")
 
-# --- midblock traffic counts (big file, read in chunks) ---
+# midblock traffic counts - big file so read in chunks
 print("Processing midblock traffic counts (chunked read)...")
 DATE_FMT = '%Y %b %d %I:%M:%S %p'
 chunks = []
@@ -47,6 +48,7 @@ else:
 
 print(f"  {len(mid):,} rows after date filter")
 
+# merge with coords and clean up
 mid = mid.merge(coords, on='Location Description', how='left')
 mid = mid.dropna(subset=['Latitude', 'Longitude'])
 mid['Count'] = pd.to_numeric(mid['Count 15 Minutes'], errors='coerce')
