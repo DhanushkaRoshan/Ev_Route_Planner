@@ -38,6 +38,8 @@ thesis_outputs/
 figures/
 figures_routes/
 results_dynamic/
+optimization/results_experiments/
+optimization/results_routes/
 
 # Jupyter
 .ipynb_checkpoints/
