@@ -1,0 +1,5 @@
+# tell github linguist to ignore data and result files
+ev_stations_forecast/data/** linguist-vendored
+ev_stations_forecast/sarima_results/** linguist-vendored
+ev_stations_forecast/sequential_results/** linguist-vendored
+ev_stations_forecast/parallel_clustered_results/** linguist-vendored
