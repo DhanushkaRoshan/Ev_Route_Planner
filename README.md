@@ -47,7 +47,7 @@ This repository contains the code for my MSc research on traffic volume forecast
 - **Regression Kriging** — Road-type trend model + Ordinary Kriging on residuals
 - **XGBoost** — Gradient boosting with network centrality features (betweenness, degree, closeness)
 - **KNN Regression** — K-Nearest Neighbors with optional network features
-- **BPR Function** — Bureau of Public Roads congestion model with KNN+Ridge ensemble
+- **BPR Function** — Bureau of Public Roads congestion model with KNN
 - **Monte Carlo Simulation** — Traffic growth scenario analysis (1000 iterations)
 
 ### EV Station Availability Prediction
